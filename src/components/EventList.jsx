@@ -24,7 +24,6 @@ const EventList = () => {
     return <div className="text-gray-500">Select profile first.</div>;
   }
 
-  // ✅ Safe filtering
   const filteredEvents = eventsList.filter((event) =>
     event.profiles?.some((profile) =>
       typeof profile === "string"
@@ -100,7 +99,7 @@ const EventList = () => {
                 viewTimezone={viewTimezone}
                 onEdit={handleEdit}
                 onViewLogs={(ev) => {
-                  console.log("Logs:", ev.logs); // 🔎 DEBUG
+                  console.log("Logs:", ev.logs);
                   setShowLogs(ev);
                 }}
               />

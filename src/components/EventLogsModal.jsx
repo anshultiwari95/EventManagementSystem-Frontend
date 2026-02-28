@@ -10,8 +10,6 @@ const EventLogsModal = ({ event, viewTimezone, setShowLogs }) => {
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 relative">
-
-        {/* Close */}
         <button
           onClick={() => setShowLogs(null)}
           className="absolute top-5 right-5 text-gray-400 hover:text-gray-600"

@@ -5,9 +5,6 @@ import {
   updateEventAPI,
 } from "../../api/eventApi";
 
-/* =========================
-   CREATE EVENT
-========================= */
 export const createEvent = createAsyncThunk(
   "events/createEvent",
   async (eventData) => {
@@ -15,9 +12,6 @@ export const createEvent = createAsyncThunk(
   }
 );
 
-/* =========================
-   FETCH EVENTS
-========================= */
 export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
   async () => {
@@ -25,9 +19,6 @@ export const fetchEvents = createAsyncThunk(
   }
 );
 
-/* =========================
-   UPDATE EVENT
-========================= */
 export const updateEvent = createAsyncThunk(
   "events/updateEvent",
   async ({ id, startTimeUTC, endTimeUTC, profiles }) => {
@@ -49,7 +40,6 @@ const eventsSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    /* ===== FETCH EVENTS ===== */
     builder.addCase(fetchEvents.pending, (state) => {
       state.loading = true;
     });
@@ -63,12 +53,10 @@ const eventsSlice = createSlice({
       state.loading = false;
     });
 
-    /* ===== CREATE EVENT ===== */
     builder.addCase(createEvent.fulfilled, (state, action) => {
       state.eventsList.push(action.payload);
     });
 
-    /* ===== UPDATE EVENT ===== */
     builder.addCase(updateEvent.fulfilled, (state, action) => {
       const index = state.eventsList.findIndex(
         (event) => event._id === action.payload._id

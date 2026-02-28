@@ -33,36 +33,35 @@ const EditEventModal = ({
 
   const handleCreateUser = async () => {
     const trimmedName = newUserName.trim();
-  
+
     if (!trimmedName) return;
-  
-    // 🔥 Prevent duplicates (case insensitive)
+
     const alreadyExists = allProfiles.some(
       (profile) =>
         profile.name.toLowerCase() === trimmedName.toLowerCase()
     );
-  
+
     if (alreadyExists) {
       alert("Profile with this name already exists.");
       return;
     }
-  
+
     const resultAction = await dispatch(
       createProfile({ name: trimmedName })
     );
-  
+
     if (resultAction.payload) {
       const currentIds =
         editingEvent.profiles?.map((p) =>
           typeof p === "string" ? p : p._id
         ) || [];
-  
+
       setEditingEvent({
         ...editingEvent,
         profiles: [...currentIds, resultAction.payload._id],
       });
     }
-  
+
     setNewUserName("");
     setShowAddUser(false);
     setSearchTerm("");

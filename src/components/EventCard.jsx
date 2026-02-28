@@ -9,7 +9,6 @@ import {
 import { convertUTCToTimezone, formatDateTime } from "../utils/timezone";
 
 const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
-  // ✅ Safe profile handling
   const profileNames =
     event.profiles?.map((p) =>
       typeof p === "string" ? p : p?.name
@@ -26,14 +25,12 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
   );
 
   const handleLogsClick = () => {
-    console.log("Event Logs:", event.logs); // 🔎 IMPORTANT DEBUG
+    console.log("Event Logs:", event.logs);
     onViewLogs(event);
   };
 
   return (
     <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">
-
-      {/* Profiles */}
       <div className="flex items-center gap-2 text-indigo-600 font-medium mb-4">
         <UsersIcon className="h-5 w-5" />
         <span className="text-gray-800">
@@ -43,7 +40,6 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
         </span>
       </div>
 
-      {/* Start */}
       <div className="flex items-start gap-3 mb-4">
         <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-1" />
         <div>
@@ -57,7 +53,6 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
         </div>
       </div>
 
-      {/* End */}
       <div className="flex items-start gap-3 mb-4">
         <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-1" />
         <div>
@@ -73,7 +68,6 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
 
       <div className="border-t my-4"></div>
 
-      {/* Metadata */}
       <div className="text-sm text-gray-500 space-y-1">
         <p>
           Created:{" "}
@@ -91,7 +85,6 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
 
       <div className="border-t my-4"></div>
 
-      {/* Actions */}
       <div className="flex gap-3">
         <button
           onClick={() => onEdit(event)}
