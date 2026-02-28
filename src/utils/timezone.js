@@ -27,7 +27,6 @@ export const getAllTimezones = () => {
     return Intl.supportedValuesOf("timeZone");
   }
 
-  // Fallback (older browsers)
   return [
     "UTC",
     "Asia/Kolkata",
