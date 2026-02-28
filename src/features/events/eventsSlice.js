@@ -5,6 +5,9 @@ import {
   updateEventAPI,
 } from "../../api/eventApi";
 
+/* =========================
+   CREATE EVENT
+========================= */
 export const createEvent = createAsyncThunk(
   "events/createEvent",
   async (eventData) => {
@@ -12,6 +15,9 @@ export const createEvent = createAsyncThunk(
   }
 );
 
+/* =========================
+   FETCH EVENTS
+========================= */
 export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
   async () => {
@@ -19,16 +25,17 @@ export const fetchEvents = createAsyncThunk(
   }
 );
 
+/* =========================
+   UPDATE EVENT
+========================= */
 export const updateEvent = createAsyncThunk(
   "events/updateEvent",
   async ({ id, startTimeUTC, endTimeUTC, profiles }) => {
-    const updatedData = {
+    const response = await updateEventAPI(id, {
       startTimeUTC,
       endTimeUTC,
       profiles,
-    };
-
-    const response = await updateEventAPI(id, updatedData);
+    });
 
     return response;
   }
@@ -42,11 +49,31 @@ const eventsSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
+    /* ===== FETCH EVENTS ===== */
+    builder.addCase(fetchEvents.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(fetchEvents.fulfilled, (state, action) => {
+      state.loading = false;
+      state.eventsList = action.payload;
+    });
+
+    builder.addCase(fetchEvents.rejected, (state) => {
+      state.loading = false;
+    });
+
+    /* ===== CREATE EVENT ===== */
+    builder.addCase(createEvent.fulfilled, (state, action) => {
+      state.eventsList.push(action.payload);
+    });
+
+    /* ===== UPDATE EVENT ===== */
     builder.addCase(updateEvent.fulfilled, (state, action) => {
       const index = state.eventsList.findIndex(
         (event) => event._id === action.payload._id
       );
-    
+
       if (index !== -1) {
         state.eventsList[index] = action.payload;
       }
