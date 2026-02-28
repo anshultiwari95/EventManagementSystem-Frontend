@@ -7,7 +7,7 @@ import { fetchProfiles } from "../features/profiles/profilesSlice";
 import { fetchEvents } from "../features/events/eventsSlice";
 
 function EventDashboard() {
-  const dispatch = useDispatch(); // ✅ MISSING LINE
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchProfiles());
@@ -16,29 +16,27 @@ function EventDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100 px-10 py-8">
-      {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
-  <div>
-    <h1 className="text-3xl font-bold">Event Management</h1>
-    <p className="text-gray-500 mt-1">
-      Create and manage events across multiple timezones
-    </p>
-  </div>
+        <div>
+          <h1 className="text-3xl font-bold">Event Management</h1>
+          <p className="text-gray-500 mt-1">
+            Create and manage events across multiple timezones
+          </p>
+        </div>
 
-  {/* FIXED WIDTH WRAPPER */}
-  <div className="w-64">
-    <ProfileSelector />
-  </div>
-</div>
-      {/* MAIN CARDS */}
+        <div className="w-64">
+          <ProfileSelector />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-[75vh]">
         <div className="bg-white rounded-xl shadow-sm p-6 border">
           <EventForm />
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-6 border flex flex-col h-[75vh]">
-  <EventList />
-</div>
+          <EventList />
+        </div>
       </div>
     </div>
   );
