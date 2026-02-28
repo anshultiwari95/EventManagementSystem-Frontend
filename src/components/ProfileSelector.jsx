@@ -67,7 +67,6 @@ const ProfileSelector = () => {
 
       {isOpen && (
         <div className="absolute left-0 top-full mt-2 w-full z-50 bg-white border border-gray-300 rounded-md shadow-lg">
-          {/* Search */}
           <div className="p-2 border-b">
             <input
               type="text"
@@ -78,7 +77,6 @@ const ProfileSelector = () => {
             />
           </div>
 
-          {/* Profile List */}
           <div className="max-h-40 overflow-y-auto">
             {filteredProfiles.length === 0 && !showAddUser && (
               <div className="p-3 text-sm text-gray-500">No profile found.</div>
@@ -104,7 +102,6 @@ const ProfileSelector = () => {
                 </div>
               ))}
 
-            {/* Add Profile Mode */}
             {showAddUser && (
               <div className="p-3 space-y-2">
                 <input
@@ -135,7 +132,6 @@ const ProfileSelector = () => {
             )}
           </div>
 
-          {/* Add Profile */}
           {!showAddUser && (
             <div className="border-t">
               <button
