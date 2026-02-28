@@ -9,9 +9,11 @@ import {
 import { convertUTCToTimezone, formatDateTime } from "../utils/timezone";
 
 const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
-  const profileNames = event.profiles?.map((p) =>
-    typeof p === "string" ? p : p.name
-  );
+  // ✅ Safe profile handling
+  const profileNames =
+    event.profiles?.map((p) =>
+      typeof p === "string" ? p : p?.name
+    ) || [];
 
   const startConverted = convertUTCToTimezone(
     event.startTimeUTC,
@@ -23,16 +25,25 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
     viewTimezone
   );
 
+  const handleLogsClick = () => {
+    console.log("Event Logs:", event.logs); // 🔎 IMPORTANT DEBUG
+    onViewLogs(event);
+  };
+
   return (
     <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">
 
+      {/* Profiles */}
       <div className="flex items-center gap-2 text-indigo-600 font-medium mb-4">
         <UsersIcon className="h-5 w-5" />
         <span className="text-gray-800">
-          {profileNames?.join(", ")}
+          {profileNames.length > 0
+            ? profileNames.join(", ")
+            : "No profiles"}
         </span>
       </div>
 
+      {/* Start */}
       <div className="flex items-start gap-3 mb-4">
         <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-1" />
         <div>
@@ -46,6 +57,7 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
         </div>
       </div>
 
+      {/* End */}
       <div className="flex items-start gap-3 mb-4">
         <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-1" />
         <div>
@@ -61,6 +73,7 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
 
       <div className="border-t my-4"></div>
 
+      {/* Metadata */}
       <div className="text-sm text-gray-500 space-y-1">
         <p>
           Created:{" "}
@@ -78,6 +91,7 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
 
       <div className="border-t my-4"></div>
 
+      {/* Actions */}
       <div className="flex gap-3">
         <button
           onClick={() => onEdit(event)}
@@ -88,7 +102,7 @@ const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
         </button>
 
         <button
-          onClick={() => onViewLogs(event)}
+          onClick={handleLogsClick}
           className="flex items-center justify-center gap-2 flex-1 border rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition"
         >
           <DocumentTextIcon className="h-4 w-4" />
