@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   XMarkIcon,
@@ -16,16 +16,53 @@ const EditEventModal = ({
     (state) => state.profiles
   );
 
+  const [profilesOpen, setProfilesOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   if (!editingEvent) return null;
 
-  const selectedProfileIds = editingEvent.profiles?.map((p) =>
-    typeof p === "string" ? p : p._id
-  );
+  // ✅ Normalize selected IDs
+  const selectedProfileIds =
+    editingEvent.profiles?.map((p) =>
+      typeof p === "string" ? p : p._id
+    ) || [];
+
+  // ✅ Toggle profile selection
+  const toggleProfile = (profileId) => {
+    if (selectedProfileIds.includes(profileId)) {
+      setEditingEvent({
+        ...editingEvent,
+        profiles: selectedProfileIds.filter((id) => id !== profileId),
+      });
+    } else {
+      setEditingEvent({
+        ...editingEvent,
+        profiles: [...selectedProfileIds, profileId],
+      });
+    }
+  };
+
+  // ✅ Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
+      ) {
+        setProfilesOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 relative">
 
+        {/* Close */}
         <button
           onClick={() => setEditingEvent(null)}
           className="absolute top-5 right-5 text-gray-400 hover:text-gray-600"
@@ -37,34 +74,51 @@ const EditEventModal = ({
           Edit Event
         </h2>
 
-        <div className="mb-5">
+        {/* ================= PROFILES DROPDOWN ================= */}
+        <div className="mb-5 relative" ref={dropdownRef}>
           <label className="block text-sm font-medium mb-2">
             Profiles
           </label>
 
-          <select
-            multiple
-            value={selectedProfileIds}
-            onChange={(e) => {
-              const selectedOptions = Array.from(
-                e.target.selectedOptions
-              ).map((option) => option.value);
-
-              setEditingEvent({
-                ...editingEvent,
-                profiles: selectedOptions,
-              });
-            }}
-            className="w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-50 h-32"
+          {/* Button */}
+          <div
+            onClick={() => setProfilesOpen(!profilesOpen)}
+            className="w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-50 cursor-pointer flex justify-between items-center"
           >
-            {allProfiles.map((profile) => (
-              <option key={profile._id} value={profile._id}>
-                {profile.name}
-              </option>
-            ))}
-          </select>
+            <span>
+              {selectedProfileIds.length > 0
+                ? `${selectedProfileIds.length} profile(s) selected`
+                : "Select profiles"}
+            </span>
+          </div>
+
+          {/* Dropdown */}
+          {profilesOpen && (
+            <div className="absolute z-50 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
+              {allProfiles.map((profile) => {
+                const isSelected =
+                  selectedProfileIds.includes(profile._id);
+
+                return (
+                  <div
+                    key={profile._id}
+                    onClick={() => toggleProfile(profile._id)}
+                    className={`px-4 py-2 cursor-pointer text-sm transition
+                      ${
+                        isSelected
+                          ? "bg-indigo-500 text-white"
+                          : "hover:bg-gray-100"
+                      }`}
+                  >
+                    {profile.name}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
+        {/* ================= TIMEZONE ================= */}
         <div className="mb-5">
           <label className="block text-sm font-medium mb-2">
             Timezone
@@ -87,6 +141,7 @@ const EditEventModal = ({
           </select>
         </div>
 
+        {/* ================= START DATE ================= */}
         <div className="mb-5">
           <label className="block text-sm font-medium mb-2">
             Start Date & Time
@@ -131,6 +186,7 @@ const EditEventModal = ({
           </div>
         </div>
 
+        {/* ================= END DATE ================= */}
         <div className="mb-8">
           <label className="block text-sm font-medium mb-2">
             End Date & Time
@@ -175,6 +231,7 @@ const EditEventModal = ({
           </div>
         </div>
 
+        {/* ================= BUTTONS ================= */}
         <div className="flex justify-end gap-4">
           <button
             onClick={() => setEditingEvent(null)}
