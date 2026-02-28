@@ -24,18 +24,18 @@ const EventList = () => {
     return <div className="text-gray-500">Select profile first.</div>;
   }
 
+  // ✅ Safe filtering
   const filteredEvents = eventsList.filter((event) =>
     event.profiles?.some((profile) =>
       typeof profile === "string"
         ? profile === selectedProfile._id
-        : profile._id === selectedProfile._id
+        : profile?._id === selectedProfile._id
     )
   );
 
   const handleEdit = (event) => {
     setEditingEvent({
       ...event,
-      profiles: event.profiles,
       startTime: dayjs
         .utc(event.startTimeUTC)
         .tz(event.eventTimezone)
@@ -58,14 +58,14 @@ const EventList = () => {
       .utc()
       .toISOString();
 
-      dispatch(
-        updateEvent({
-          id: event._id,
-          startTimeUTC: startUTC,
-          endTimeUTC: endUTC,
-          profiles: event.profiles,
-        })
-      );
+    dispatch(
+      updateEvent({
+        id: event._id,
+        startTimeUTC: startUTC,
+        endTimeUTC: endUTC,
+        profiles: event.profiles,
+      })
+    );
 
     setEditingEvent(null);
   };
@@ -99,7 +99,10 @@ const EventList = () => {
                 event={event}
                 viewTimezone={viewTimezone}
                 onEdit={handleEdit}
-                onViewLogs={setShowLogs}
+                onViewLogs={(ev) => {
+                  console.log("Logs:", ev.logs); // 🔎 DEBUG
+                  setShowLogs(ev);
+                }}
               />
             ))}
           </div>
