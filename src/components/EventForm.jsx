@@ -81,7 +81,6 @@ const EventForm = () => {
 
     dispatch(createEvent(newEvent));
 
-    // Reset
     setSelectedProfiles([]);
     setStartTime("");
     setEndTime("");
@@ -114,7 +113,6 @@ const EventForm = () => {
       <h2 className="text-xl font-semibold mb-6">Create Event</h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Profiles Dropdown */}
         <div className="relative w-full" ref={dropdownRef}>
           <label className="block text-sm font-medium mb-1">
             Profiles
@@ -137,7 +135,6 @@ const EventForm = () => {
 
           {isOpen && (
             <div className="absolute left-0 z-50 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg">
-              {/* Search */}
               <div className="p-2 border-b">
                 <input
                   type="text"
@@ -150,7 +147,6 @@ const EventForm = () => {
                 />
               </div>
 
-              {/* Profile List */}
               <div className="max-h-48 overflow-y-auto">
                 {filteredProfiles.length === 0 &&
                   !showAddUser && (
@@ -196,7 +192,6 @@ const EventForm = () => {
                     );
                   })}
 
-                {/* Add Profile Mode */}
                 {showAddUser && (
                   <div className="p-3 space-y-2 border-t">
                     <input
@@ -233,7 +228,6 @@ const EventForm = () => {
                 )}
               </div>
 
-              {/* Add Profile Button */}
               {!showAddUser && (
                 <div className="border-t">
                   <button
@@ -251,7 +245,6 @@ const EventForm = () => {
           )}
         </div>
 
-        {/* Timezone */}
         <div>
           <label className="block text-sm font-medium mb-1">
             Timezone
@@ -274,7 +267,6 @@ const EventForm = () => {
           </select>
         </div>
 
-        {/* Start Date & Time */}
         <div>
           <label className="block text-sm font-medium mb-1">
             Start Date & Time
@@ -315,7 +307,6 @@ const EventForm = () => {
           </div>
         </div>
 
-        {/* End Date & Time */}
         <div>
           <label className="block text-sm font-medium mb-1">
             End Date & Time
@@ -356,7 +347,6 @@ const EventForm = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-md font-medium hover:opacity-90 transition"
