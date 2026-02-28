@@ -21,8 +21,16 @@ export const fetchEvents = createAsyncThunk(
 
 export const updateEvent = createAsyncThunk(
   "events/updateEvent",
-  async ({ id, updatedData }) => {
-    return await updateEventAPI(id, updatedData);
+  async ({ id, startTimeUTC, endTimeUTC, profiles }) => {
+    const updatedData = {
+      startTimeUTC,
+      endTimeUTC,
+      profiles,
+    };
+
+    const response = await updateEventAPI(id, updatedData);
+
+    return response;
   }
 );
 
@@ -34,21 +42,15 @@ const eventsSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(createEvent.fulfilled, (state, action) => {
-        state.eventsList.push(action.payload);
-      })
-      .addCase(fetchEvents.fulfilled, (state, action) => {
-        state.eventsList = action.payload;
-      })
-      .addCase(updateEvent.fulfilled, (state, action) => {
-        const index = state.eventsList.findIndex(
-          (event) => event._id === action.payload._id
-        );
-        if (index !== -1) {
-          state.eventsList[index] = action.payload;
-        }
-      });
+    builder.addCase(updateEvent.fulfilled, (state, action) => {
+      const index = state.eventsList.findIndex(
+        (event) => event._id === action.payload._id
+      );
+    
+      if (index !== -1) {
+        state.eventsList[index] = action.payload;
+      }
+    });
   },
 });
 

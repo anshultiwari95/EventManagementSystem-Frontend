@@ -1,71 +1,100 @@
 import React from "react";
+import {
+  UsersIcon,
+  CalendarDaysIcon,
+  ClockIcon,
+  PencilSquareIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 import { convertUTCToTimezone, formatDateTime } from "../utils/timezone";
 
-const EventCard = ({ event, viewTimezone, onEdit }) => {
-  const logs = event.logs || [];
+const EventCard = ({ event, viewTimezone, onEdit, onViewLogs }) => {
+  const profileNames = event.profiles?.map((p) =>
+    typeof p === "string" ? p : p.name
+  );
 
-  const startConverted = convertUTCToTimezone(event.startTimeUTC, viewTimezone);
+  const startConverted = convertUTCToTimezone(
+    event.startTimeUTC,
+    viewTimezone
+  );
 
-  const endConverted = convertUTCToTimezone(event.endTimeUTC, viewTimezone);
+  const endConverted = convertUTCToTimezone(
+    event.endTimeUTC,
+    viewTimezone
+  );
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 shadow-sm bg-white">
-      <p className="text-sm text-gray-500 mb-2">
-        Event Timezone: {event.eventTimezone}
-      </p>
+    <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm">
 
-      <p>Start: {formatDateTime(startConverted)}</p>
-      <p>End: {formatDateTime(endConverted)}</p>
+      <div className="flex items-center gap-2 text-indigo-600 font-medium mb-4">
+        <UsersIcon className="h-5 w-5" />
+        <span className="text-gray-800">
+          {profileNames?.join(", ")}
+        </span>
+      </div>
 
-      <button
-        onClick={() => onEdit(event)}
-        className="mt-3 text-sm text-indigo-600"
-      >
-        ✏️ Edit
-      </button>
-
-      {logs.length > 0 && (
-        <div className="mt-4 border-t pt-3">
-          <p className="text-sm font-semibold mb-2">Update Logs</p>
-
-          <div className="space-y-2">
-            {logs.map((log, index) => {
-              const updatedAt = convertUTCToTimezone(
-                log.updatedAtUTC,
-                viewTimezone,
-              );
-
-              return (
-                <div key={index} className="bg-gray-50 p-2 rounded text-sm">
-                  <p className="text-gray-500">
-                    Updated At: {formatDateTime(updatedAt)}
-                  </p>
-
-                  <p>
-                    Previous Start:{" "}
-                    {formatDateTime(
-                      convertUTCToTimezone(
-                        log.previousValues.startTimeUTC,
-                        viewTimezone,
-                      ),
-                    )}
-                  </p>
-
-                  <p>
-                    New Start:{" "}
-                    {formatDateTime(
-                      convertUTCToTimezone(
-                        log.newValues.startTimeUTC,
-                        viewTimezone,
-                      ),
-                    )}
-                  </p>
-                </div>
-              );
-            })}
+      <div className="flex items-start gap-3 mb-4">
+        <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-1" />
+        <div>
+          <p className="font-medium text-gray-800">
+            Start: {formatDateTime(startConverted).split(",")[0]}
+          </p>
+          <div className="flex items-center gap-1 text-sm text-gray-500">
+            <ClockIcon className="h-4 w-4" />
+            {formatDateTime(startConverted).split(",")[1]}
           </div>
         </div>
-      )}
+      </div>
+
+      <div className="flex items-start gap-3 mb-4">
+        <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-1" />
+        <div>
+          <p className="font-medium text-gray-800">
+            End: {formatDateTime(endConverted).split(",")[0]}
+          </p>
+          <div className="flex items-center gap-1 text-sm text-gray-500">
+            <ClockIcon className="h-4 w-4" />
+            {formatDateTime(endConverted).split(",")[1]}
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t my-4"></div>
+
+      <div className="text-sm text-gray-500 space-y-1">
+        <p>
+          Created:{" "}
+          {formatDateTime(
+            convertUTCToTimezone(event.createdAt, viewTimezone)
+          )}
+        </p>
+        <p>
+          Updated:{" "}
+          {formatDateTime(
+            convertUTCToTimezone(event.updatedAt, viewTimezone)
+          )}
+        </p>
+      </div>
+
+      <div className="border-t my-4"></div>
+
+      <div className="flex gap-3">
+        <button
+          onClick={() => onEdit(event)}
+          className="flex items-center justify-center gap-2 flex-1 border rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition"
+        >
+          <PencilSquareIcon className="h-4 w-4" />
+          Edit
+        </button>
+
+        <button
+          onClick={() => onViewLogs(event)}
+          className="flex items-center justify-center gap-2 flex-1 border rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition"
+        >
+          <DocumentTextIcon className="h-4 w-4" />
+          View Logs
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { ZONE_OPTIONS } from "../utils/timezone";
 import EventCard from "./EventCard";
 import EditEventModal from "./EditEventModal";
-import { useEffect } from "react";
+import EventLogsModal from "./EventLogsModal";
 import { fetchEvents, updateEvent } from "../features/events/eventsSlice";
 
 const EventList = () => {
@@ -14,6 +14,7 @@ const EventList = () => {
 
   const [viewTimezone, setViewTimezone] = useState("America/New_York");
   const [editingEvent, setEditingEvent] = useState(null);
+  const [showLogs, setShowLogs] = useState(null);
 
   useEffect(() => {
     dispatch(fetchEvents());
@@ -34,6 +35,7 @@ const EventList = () => {
   const handleEdit = (event) => {
     setEditingEvent({
       ...event,
+      profiles: event.profiles,
       startTime: dayjs
         .utc(event.startTimeUTC)
         .tz(event.eventTimezone)
@@ -56,15 +58,14 @@ const EventList = () => {
       .utc()
       .toISOString();
 
-    dispatch(
-      updateEvent({
-        id: event._id,
-        updatedData: {
+      dispatch(
+        updateEvent({
+          id: event._id,
           startTimeUTC: startUTC,
           endTimeUTC: endUTC,
-        },
-      })
-    );
+          profiles: event.profiles,
+        })
+      );
 
     setEditingEvent(null);
   };
@@ -72,7 +73,6 @@ const EventList = () => {
   return (
     <div className="flex flex-col h-full">
       <h2 className="text-xl font-semibold mb-4">Events</h2>
-      <h3 className="text-xs font-medium mb-4">View in Timezone</h3>
 
       <select
         value={viewTimezone}
@@ -99,16 +99,23 @@ const EventList = () => {
                 event={event}
                 viewTimezone={viewTimezone}
                 onEdit={handleEdit}
+                onViewLogs={setShowLogs}
               />
             ))}
           </div>
         )}
       </div>
-  
+
       <EditEventModal
         editingEvent={editingEvent}
         setEditingEvent={setEditingEvent}
         handleUpdate={handleUpdate}
+      />
+
+      <EventLogsModal
+        event={showLogs}
+        viewTimezone={viewTimezone}
+        setShowLogs={setShowLogs}
       />
     </div>
   );

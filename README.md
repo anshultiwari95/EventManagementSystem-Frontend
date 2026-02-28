@@ -8,8 +8,15 @@ Built with production-grade timezone handling, UTC storage logic, and dynamic pr
 
 ## 🚀 Live Demo
 
-Frontend: https://your-frontend-url.vercel.app  
-Backend API: https://your-backend-url.onrender.com  
+Frontend: https://event-management-system-frontend-sigma.vercel.app/
+Backend API: https://eventmanagementsystem-backend-v8xv.onrender.com/ 
+
+---
+
+## 🚀 Github Repo
+
+Frontend: https://github.com/anshultiwari95/EventManagementSystem-Frontend
+Backend API: https://github.com/anshultiwari95/EventManagementSystem-Backend
 
 ---
 
