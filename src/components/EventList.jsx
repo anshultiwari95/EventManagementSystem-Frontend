@@ -72,6 +72,7 @@ const EventList = () => {
   return (
     <div className="flex flex-col h-full">
       <h2 className="text-xl font-semibold mb-4">Events</h2>
+      <h3 className="text-lg font-normal mb-2">View in Timezone</h3>
 
       <select
         value={viewTimezone}
